@@ -51,7 +51,7 @@ public class Chooser extends CordovaPlugin {
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, accept.split(","));
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 
         Intent chooser = Intent.createChooser(intent, "Select File");
@@ -82,15 +82,8 @@ public class Chooser extends CordovaPlugin {
         try {
             if (requestCode == Chooser.PICK_FILE_REQUEST && this.callback != null) {
                 if (resultCode == Activity.RESULT_OK) {
-                    JSONArray files = new JSONArray();
-                    if (data.getClipData() != null) {
-                        for (int i = 0; i < data.getClipData().getItemCount(); i++) {
-                            files.put(processFileUri(data.getClipData().getItemAt(i).getUri()));
-                        }
-                        this.callback.success(files.toString());
-                    } else if (data.getData() != null) {
-                        files.put(processFileUri(data.getData()));
-                        this.callback.success(files.toString());
+                    if (data.getData() != null) {
+                        this.callback.success(processFileUri(data.getData()).toString());
                     } else {
                         this.callback.error("File URI was null.");
                     }
